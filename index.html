@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        form {
+            background-color: #ffffff;
+            border: 2px solid #ced4da;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 4px solid #ced4da; /* Set default border color */
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+            font-size: 14px;
+        }
+
+        input:valid, textarea:valid, select:valid {
+            border-color: #28a745; /* Change border color to green on valid input */
+        }
+
+        input:focus:invalid, textarea:focus:invalid, select:focus:invalid {
+            border-color: #dc3545; /* Change border color to red on focus if invalid */
+        }
+
+        #photo-input {
+            display: none;
+        }
+
+        #photo-label {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+            margin-bottom: 16px;
+            display: block;
+            font-size: 14px;
+        }
+
+        #submit-btn {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        #submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #submit-btn:hover:enabled {
+            background-color: #0056b3;
+        }
+
+        #result-message {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<form id="myForm">
+    <!-- Name Input -->
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required pattern="[a-zA-Z\s]+">
+
+    <!-- Email Input -->
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+
+    <!-- Phone Number Input -->
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" required pattern="\d{10}">
+
+    <!-- Password Input -->
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$">
+
+    <!-- URL Input -->
+    <label for="url">URL:</label>
+    <input type="url" id="url" name="url" required pattern="https?://.+">
+
+    <!-- Photo Upload Input -->
+    <label for="photo">Upload Photo:</label>
+    <input type="file" id="photo-input" accept="image/*" required>
+    <label id="photo-label" for="photo-input">Choose a photo</label>
+
+    <!-- Message Textarea -->
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" rows="4" required></textarea>
+
+    <!-- Submit Button -->
+    <button type="button" id="submit-btn" disabled>Submit</button>
+
+    <!-- Result Message Display -->
+    <div id="result-message"></div>
+</form>
+
+<script>
+    // Event listener for photo input change
+    document.getElementById('photo-input').addEventListener('change', function () {
+        document.getElementById('photo-label').innerText = this.files[0].name;
+    });
+
+    // Event listener for form input change
+    document.getElementById('myForm').addEventListener('input', function () {
+        validateForm();
+    });
+
+    // Function to validate form inputs
+    function validateForm() {
+        let isValid = true;
+
+        // Regular expressions for validation
+        const emailRegex = /^\S+@\S+\.\S+$/;
+        const phoneRegex = /^\d{10}$/;
+        const urlRegex = /^https?:\/\/.+/;
+        const photoRegex = /\.(jpg|jpeg|png|gif)$/i; // Allow only jpg, jpeg, png, and gif extensions for photos
+
+        // Validate email
+        const emailInput = document.getElementById('email');
+        isValid = emailRegex.test(emailInput.value);
+
+        // Validate phone number
+        const phoneInput = document.getElementById('phone');
+        isValid = isValid && phoneRegex.test(phoneInput.value);
+
+        // Validate URL
+        const urlInput = document.getElementById('url');
+        isValid = isValid && urlRegex.test(urlInput.value);
+
+        // Validate photo
+        const photoInput = document.getElementById('photo-input');
+        isValid = isValid && photoRegex.test(photoInput.value);
+
+        // Enable/disable submit button based on validation
+        document.getElementById('submit-btn').disabled = !isValid;
+
+        // Change border color based on validation result
+        document.getElementById('myForm').classList.toggle('valid', isValid);
+        document.getElementById('myForm').classList.toggle('invalid', !isValid);
+    }
+
+    // Event listener for submit button click
+    document.getElementById('submit-btn').addEventListener('click', function () {
+        const resultMessage = document.getElementById('result-message');
+        resultMessage.textContent = 'Form submitted successfully!';
+        resultMessage.style.color = '#28a745';
+    });
+</script>
+
+</body>
+</html>
